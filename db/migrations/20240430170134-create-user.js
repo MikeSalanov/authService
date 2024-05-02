@@ -20,7 +20,16 @@ module.exports = {
       },
       password: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
+      },
+      isActivated: {
+        allowNull: false,
+        defaultValue: false,
+        type: Sequelize.BOOLEAN
+      },
+      activationLink: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

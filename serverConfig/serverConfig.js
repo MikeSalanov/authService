@@ -1,8 +1,12 @@
-const express = require("express")
-const app = express()
+const express = require("express");
+const app = express();
 const cors = require("cors");
-const cookieParser = require("cookie-parser"); 
+const cookieParser = require("cookie-parser");
 
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors())
+const serverConfig = (app) => {
+  app.use(express.json());
+  app.use(cookieParser());
+  app.use(cors());
+};
+
+module.exports = serverConfig;

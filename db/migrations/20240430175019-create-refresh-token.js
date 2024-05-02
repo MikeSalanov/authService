@@ -2,18 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RefreshTokens', {
+    await queryInterface.createTable('Tokens', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      token: {
+      refreshToken: {
         type: Sequelize.STRING
-      },
-      isValid: {
-        type: Sequelize.BOOLEAN
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -33,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RefreshTokens');
+    await queryInterface.dropTable('Tokens');
   }
 };
