@@ -7,7 +7,7 @@ const validateRegisterMiddleware = require("../middlewares/validateRegister.midd
 const uuid = require("uuid");
 
 const userService = require("../services/userService");
-const refreshtoken = require("../db/models/refreshtoken");
+// const refreshtoken = require("../db/models/refreshtoken");
 const userDto = require("../services/userService");
 
 router.post("/register", validateRegisterMiddleware, async (req, res) => {

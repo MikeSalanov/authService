@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const mailService = require("./mailService");
 const UserDto = require("../dtos/user-dto");
 
-const register = async (userName, email, password) => {
+const register = async (userName = undefined, email, password) => {
   const newUser = await User.findOne({ where: { email } });
   if (newUser) {
     throw new Error(
@@ -42,4 +42,19 @@ const activate = async (activationLink) => {
   await user.save();
 };
 
-module.exports = { register };
+const login = async (email, password) => {
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw Error("Пользователь с таким email не найден");
+  }
+  const isSamePass = await bcrypt.compare(password, user.password);
+  if (!isSamePass) {
+    throw Error("Неверный пароль");
+  }
+  const userDto = new UserDto(user);
+  const tokens = tokenService.generateTokens({ ...userDto });
+  await tokenService.saveToken(userDto.id, tokens.refreshToken);
+  return { ...tokens, user: userDto };
+};
+
+module.exports = { register, activate, login };
