@@ -12,19 +12,19 @@ const generateTokens = (payload) => {
 };
 
 const saveToken = async (userId, refreshToken) => {
-  try {
-    const tokenData = await Token.findOne({ where: { userId } });
-    if (tokenData) {
-      tokenData.refreshToken = refreshToken;
-      return tokenData.save();
-    }
-    const token = await Token.create({ userId, refreshToken });
-    return token;
-  } catch (error) {
-    console.log(error);
+  const tokenData = await Token.findOne({ where: { userId } });
+  if (tokenData) {
+    tokenData.refreshToken = refreshToken;
+    return tokenData.save();
   }
+  const token = await Token.create({ userId, refreshToken });
+  return token;
 };
 
-module.exports = { generateTokens, saveToken };
+const removeToken = async (refreshToken) => {
+  await Token.destroy({ where: { refreshToken } });
+};
 
-//{"userName": "Mansur", "password":"111", "email": "m@m"}
+module.exports = { generateTokens, saveToken, removeToken };
+
+

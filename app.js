@@ -5,12 +5,15 @@ const serverConfig = require("./serverConfig/serverConfig");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const errorMiddleware = require("./middlewares/error-middleware");
+
 const registerRouter = require("./routers/api.auth.router");
-// const mailRouter = require("./routers/api.mail.router");
 const loginRouter = require("./routers/api.login.router");
+const logOutRouter = require("./routers/api.logout.router")
 
 serverConfig(app);
 
-app.use("/api", registerRouter, loginRouter);
+app.use("/api", registerRouter, loginRouter, logOutRouter);
+app.use(errorMiddleware);
 
 app.listen(PORT, () => console.log(`Server is started on PORT: ${PORT}`));
