@@ -9,10 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userName: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
       email: {
         allowNull: false,
         unique: true,
@@ -22,14 +18,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      isActivated: {
+      regIsConfirmed: {
         allowNull: false,
         defaultValue: false,
         type: Sequelize.BOOLEAN
-      },
-      activationLink: {
-        allowNull: false,
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

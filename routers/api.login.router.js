@@ -1,10 +1,10 @@
-const { validationResult } = require("express-validator");
+// const { validationResult } = require("express-validator");
 const userService = require("../services/userService");
 
-const {
-  validateAuthMiddleware,
-} = require("../middlewares/validateAuth.middleware");
-const { User } = require("../db/models");
+// const {
+//   validateAuthMiddleware,
+// } = require("../middlewares/validateAuth.middleware");
+// const { User } = require("../db/models");
 
 const router = require("express").Router();
 

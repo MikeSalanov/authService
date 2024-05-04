@@ -1,5 +1,5 @@
-const router = require("express").Router();
+// const router = require("express").Router();
 
-module.exports = router.get("/activate/:link", (req, res) => {});
+// module.exports = router.get("/activate/:link", (req, res) => {});
 
 
