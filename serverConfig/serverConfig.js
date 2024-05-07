@@ -6,7 +6,12 @@ const cookieParser = require("cookie-parser");
 const serverConfig = (app) => {
   app.use(express.json());
   app.use(cookieParser());
-  app.use(cors());
+  app.use(
+    cors({
+      credentials: true,
+      origin: process.env.CLIENT_URL,
+    })
+  );
 };
 
 module.exports = serverConfig;

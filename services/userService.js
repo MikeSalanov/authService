@@ -17,13 +17,6 @@ const register = async (email, password) => {
     email,
     password: hashedPassword,
   });
-
-  // const userDto = new UserDto(user); // id, email, regIsConfirmed
-
-  // const tokens = tokenService.generateTokens({ ...userDto });
-  // await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
-  // return { ...tokens, user: userDto };
 };
 
 const login = async (email, password) => {
@@ -45,4 +38,20 @@ const logout = async (refreshToken) => {
   await tokenService.removeToken(refreshToken);
 };
 
-module.exports = { register, login, logout };
+const refresh = async (refreshToken) => {
+  if (!refreshToken) {
+    throw ApiError.UnauthorizedError();
+  }
+  const userData = tokenService.validateRefreshToken(refreshToken);
+  const tokenFromDB = await tokenService.findToken(refreshToken);
+  if (!userData || !tokenFromDB) {
+    throw ApiError.UnauthorizedError();
+  }
+  const user = await User.findByPk(userData.id);
+  const userDto = new UserDto(user);
+  const tokens = tokenService.generateTokens({ ...userDto });
+  await tokenService.saveToken(userDto.id, tokens.refreshToken);
+  return { ...tokens, user: userDto };
+};
+
+module.exports = { register, login, logout, refresh };

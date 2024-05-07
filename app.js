@@ -9,11 +9,12 @@ const errorMiddleware = require("./middlewares/error-middleware");
 
 const registerRouter = require("./routers/api.auth.router");
 const loginRouter = require("./routers/api.login.router");
-const logOutRouter = require("./routers/api.logout.router")
+const logOutRouter = require("./routers/api.logout.router");
+const refreshRouter = require("./routers/api.refresh.router");
 
 serverConfig(app);
 
-app.use("/api", registerRouter, loginRouter, logOutRouter);
+app.use("/api", registerRouter, loginRouter, logOutRouter, refreshRouter);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => console.log(`Server is started on PORT: ${PORT}`));
