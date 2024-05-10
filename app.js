@@ -7,14 +7,15 @@ const PORT = process.env.PORT || 5000;
 
 const errorMiddleware = require("./middlewares/error-middleware");
 
-const registerRouter = require("./routers/api.auth.router");
+const registerRouter = require("./routers/api.signup.router");
 const loginRouter = require("./routers/api.login.router");
 const logOutRouter = require("./routers/api.logout.router");
 const refreshRouter = require("./routers/api.refresh.router");
+const validateAccessTokenRouter = require('./routers/api.tokenValidate.router');
 
 serverConfig(app);
 
-app.use("/api", registerRouter, loginRouter, logOutRouter, refreshRouter);
+app.use('/auth-service', registerRouter, loginRouter, logOutRouter, refreshRouter, validateAccessTokenRouter);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => console.log(`Server is started on PORT: ${PORT}`));

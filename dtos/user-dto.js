@@ -1,11 +1,9 @@
 module.exports = class UserDto {
   email;
-  id;
-  isActivated;
+  user_id;
 
   constructor(model) {
     this.email = model.email;
-    this.id = model.id;
-    this.regIsConfirmed = model.regIsConfirmed;
+    this.user_id = model.id;
   }
 };

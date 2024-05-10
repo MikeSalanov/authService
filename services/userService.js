@@ -3,24 +3,29 @@ const tokenService = require("./tokenService");
 const bcrypt = require("bcrypt");
 const UserDto = require("../dtos/user-dto");
 const ApiError = require("../exceptions/api-error");
+const crypto = require('crypto');
 
 const register = async (email, password) => {
   const newUser = await User.findOne({ where: { email } });
   if (newUser) {
     throw ApiError.BadRequest(
-      `Пользователь c почтовым адресом ${email} уже зарегестрирован`
+      `Пользователь c почтовым адресом ${email} уже зарегистрирован`
     );
   }
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
     email,
+    id: crypto.randomUUID(),
     password: hashedPassword,
+  }, {
+    raw: true
   });
+  return user.dataValues;
 };
 
 const login = async (email, password) => {
-  const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email }, raw: true });
   if (!user) {
     throw ApiError.BadRequest("Пользователь с таким email не найден");
   }
@@ -30,7 +35,7 @@ const login = async (email, password) => {
   }
   const userDto = new UserDto(user);
   const tokens = tokenService.generateTokens({ ...userDto });
-  await tokenService.saveToken(userDto.id, tokens.refreshToken);
+  await tokenService.saveToken(userDto.user_id, tokens.refreshToken);
   return { ...tokens, user: userDto };
 };
 
@@ -54,4 +59,15 @@ const refresh = async (refreshToken) => {
   return { ...tokens, user: userDto };
 };
 
-module.exports = { register, login, logout, refresh };
+const toGetUserInfo = async (email) => {
+  const user = await User.findOne({
+    where: email
+  }, {
+    raw: true
+  });
+  if (!user) throw new ApiError.BadRequest('User not found');
+  console.log(user);
+  return user;
+}
+
+module.exports = { register, login, logout, refresh, toGetUserInfo,  };
