@@ -30,12 +30,12 @@ const validateRefreshToken = (token) => {
 };
 
 const saveToken = async (userId, refreshToken) => {
-  const tokenData = await Token.findOne({ where: { userId } });
+  const tokenData = await Token.findOne({ where: { user_id: userId } });
   if (tokenData) {
     tokenData.refreshToken = refreshToken;
     return tokenData.save();
   }
-  const token = await Token.create({ userId, refreshToken });
+  const token = await Token.create({ user_id: userId, refreshToken });
   return token;
 };
 
