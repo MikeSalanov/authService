@@ -2,9 +2,9 @@ const userService = require("../services/userService");
 
 const router = require("express").Router();
 
-router.post("/signIn", async (req, res, next) => {
+router.post('/signIn', async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body
     const userData = await userService.login(email, password);
 
     res.cookie("refreshToken", userData.refreshToken, {

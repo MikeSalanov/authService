@@ -1,4 +1,4 @@
-const { User } = require("../db/models");
+const { User, registration_confirm } = require("../db/models");
 const tokenService = require("./tokenService");
 const bcrypt = require("bcrypt");
 const UserDto = require("../dtos/user-dto");
@@ -13,19 +13,32 @@ const register = async (email, password) => {
     );
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-
+  const userId = crypto.randomUUID();
   const user = await User.create({
     email,
-    id: crypto.randomUUID(),
+    id: userId,
     password: hashedPassword,
-  }, {
-    raw: true
   });
-  return user.dataValues;
+  let confirmationCode = '';
+  const characters = '123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+  for (let i = 0; i < 64; i += 1) {
+    confirmationCode = confirmationCode.concat(
+      characters[Math.floor(Math.random() * (characters.length - 1 + 1))]
+    );
+  }
+  await registration_confirm.create({
+    confirmation_code: confirmationCode,
+    user_id: userId,
+    register_confirmed: false,
+  });
+  return { ...user.dataValues, confirmationCode };
 };
 
 const login = async (email, password) => {
-  const user = await User.findOne({ where: { email }, raw: true });
+  const user = await User.findOne({
+    where: { email },
+    raw: true
+  });
   if (!user) {
     throw ApiError.BadRequest("Пользователь с таким email не найден");
   }
@@ -33,6 +46,13 @@ const login = async (email, password) => {
   if (!isSamePass) {
     throw ApiError.BadRequest("Неверный пароль");
   }
+  const registerConfirmDataOfUser = await registration_confirm.findOne({
+    where: {
+      user_id: user.id
+    },
+    raw: true
+  });
+  if (!registerConfirmDataOfUser.register_confirmed) throw ApiError.BadRequest('Account has not confirmed');
   const userDto = new UserDto(user);
   const tokens = tokenService.generateTokens({ ...userDto });
   await tokenService.saveToken(userDto.user_id, tokens.refreshToken);

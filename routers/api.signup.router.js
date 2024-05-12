@@ -8,8 +8,8 @@ router.post("/signUp", async (req, res, next) => {
     if (password !== confirmPassword) return res.status(400).json({
       message: 'Password does not match to confirmPassword'
     });
-    await userService.register(email, password);
-    await produceMessageOfRequestRegistration(email);
+    const { confirmationCode } = await userService.register(email, password);
+    await produceMessageOfRequestRegistration(email, confirmationCode);
     return res.status(201).json({ message: "User has been successfully created" });
   } catch (error) {
     next(error);
