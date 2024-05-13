@@ -73,9 +73,7 @@ const login = async (email, password) => {
   });
   if (!registerConfirmDataOfUser.register_confirmed) throw ApiError.BadRequest('Account has not confirmed');
   const userDto = new UserDto(user);
-  console.log('before generate token');
   const tokens = tokenService.generateTokens({ ...userDto });
-  console.log('before save token');
   await tokenService.saveToken(userDto.user_id, tokens.refreshToken);
   return { ...tokens, user: userDto };
 };

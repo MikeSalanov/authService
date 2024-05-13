@@ -30,9 +30,7 @@ const validateRefreshToken = (token) => {
 };
 
 const saveToken = async (userId, refreshToken) => {
-  console.log('before find token data', userId);
-  const tokenData = await Token.findOne({ where: { userId }, raw: true });
-  console.log(tokenData);
+  const tokenData = await Token.findAll({ where: { userId }, raw: true });
   if (tokenData) {
     tokenData.refreshToken = refreshToken;
     return tokenData.save();
