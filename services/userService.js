@@ -34,6 +34,25 @@ const register = async (email, password) => {
   return { ...user.dataValues, confirmationCode };
 };
 
+const confirmRegistration = async (email, password, confirmationCode) => {
+  try {
+    const registrationConfirmEntity = await registration_confirm.findOne({
+      where: {
+        confirmation_code: confirmationCode
+      },
+      raw: true
+    });
+    if (!registrationConfirmEntity) throw ApiError.BadRequest('Invalid data of confirmation');
+    await registration_confirm.update(
+      { register_confirmed: true },
+      { where: { confirmation_code: confirmationCode } }
+    );
+    return await login(email, password);
+  } catch (err) {
+    throw new Error('Error in confirm registration'.concat(err));
+  }
+}
+
 const login = async (email, password) => {
   const user = await User.findOne({
     where: { email },
@@ -54,7 +73,9 @@ const login = async (email, password) => {
   });
   if (!registerConfirmDataOfUser.register_confirmed) throw ApiError.BadRequest('Account has not confirmed');
   const userDto = new UserDto(user);
+  console.log('before generate token');
   const tokens = tokenService.generateTokens({ ...userDto });
+  console.log('before save token');
   await tokenService.saveToken(userDto.user_id, tokens.refreshToken);
   return { ...tokens, user: userDto };
 };
@@ -90,4 +111,4 @@ const toGetUserInfo = async (email) => {
   return user;
 }
 
-module.exports = { register, login, logout, refresh, toGetUserInfo,  };
+module.exports = { register, login, logout, refresh, toGetUserInfo, confirmRegistration };

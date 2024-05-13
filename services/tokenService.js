@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { Token } = require("../db/models");
+const { Token } = require('../db/models');
 
 const generateTokens = (payload) => {
   const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
@@ -30,12 +30,14 @@ const validateRefreshToken = (token) => {
 };
 
 const saveToken = async (userId, refreshToken) => {
-  const tokenData = await Token.findOne({ where: { user_id: userId } });
+  console.log('before find token data', userId);
+  const tokenData = await Token.findOne({ where: { userId }, raw: true });
+  console.log(tokenData);
   if (tokenData) {
     tokenData.refreshToken = refreshToken;
     return tokenData.save();
   }
-  const token = await Token.create({ user_id: userId, refreshToken });
+  const token = await Token.create({ userId, refreshToken });
   return token;
 };
 
