@@ -8,8 +8,8 @@ router.post('/confirm-registration', async (req, res, next) => {
         const userData = await userService.confirmRegistration(email, password, confirmationCode);
 
         res.cookie("refreshToken", userData.refreshToken, {
-            maxAge: 15 * 60 * 1000,
-            httpOnly: true,
+          maxAge: 15 * 60 * 1000,
+          httpOnly: true,
         });
         return res.json(userData);
     } catch (error) {
