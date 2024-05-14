@@ -3,7 +3,7 @@ const express = require("express");
 
 const serverConfig = require("./serverConfig/serverConfig");
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4001;
 
 const errorMiddleware = require("./middlewares/error-middleware");
 
