@@ -20,20 +20,19 @@ serverConfig(app);
 
 app.use(
   '/auth-service',
-   
-  registerRouter,
-   
-  loginRouter,
-   
-  logOutRouter,
-   
-  refreshRouter,
-   
-  validateAccessTokenRouter,
-    confirmRegistrationRouter
 
+  registerRouter,
+
+  loginRouter,
+
+  logOutRouter,
+
+  refreshRouter,
+
+  validateAccessTokenRouter,
+  confirmRegistrationRouter
 );
-app.use('/admin',adminMiddleware, adminRouter);
+app.use('/admin', adminMiddleware, adminRouter);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => console.log(`Server is started on PORT: ${PORT}`));
