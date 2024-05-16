@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const userService = require("../services/userService");
 
-router.get("/refresh", async (req, res, next) => {
+router.get('/refresh', async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
     const userData = await userService.refresh(refreshToken);
