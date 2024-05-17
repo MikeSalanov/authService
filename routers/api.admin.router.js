@@ -11,4 +11,15 @@ router.get('/users', async (req, res) => {
   }
 });
 
+router.delete('/users', async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+  try {
+    const userData = await adminService.delUser(id);
+    return res.json(userData);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = router;
