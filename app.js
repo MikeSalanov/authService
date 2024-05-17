@@ -15,6 +15,7 @@ const refreshRouter = require('./routers/api.refresh.router');
 const validateAccessTokenRouter = require('./routers/api.tokenValidate.router');
 const confirmRegistrationRouter = require('./routers/api.confirmRegistration.router');
 const adminRouter = require('./routers/api.admin.router');
+const userRouter = require('./routers/api.user.router');
 
 serverConfig(app);
 
@@ -33,6 +34,7 @@ app.use(
   confirmRegistrationRouter
 );
 app.use('/admin', adminMiddleware, adminRouter);
+app.use('/user-service', userRouter);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => console.log(`Server is started on PORT: ${PORT}`));
