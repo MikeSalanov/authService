@@ -6,7 +6,6 @@ const app = express();
 const PORT = process.env.PORT || 4001;
 
 const errorMiddleware = require('./middlewares/error-middleware');
-const adminMiddleware = require('./middlewares/admin-middleware');
 
 const registerRouter = require('./routers/api.signup.router');
 const loginRouter = require('./routers/api.login.router');
@@ -31,10 +30,11 @@ app.use(
   refreshRouter,
 
   validateAccessTokenRouter,
-  confirmRegistrationRouter
+  confirmRegistrationRouter,
+  adminRouter,
+  userRouter
 );
-app.use('/admin', adminMiddleware, adminRouter);
-app.use('/user-service', userRouter);
+
 app.use(errorMiddleware);
 
 app.listen(PORT, () => console.log(`Server is started on PORT: ${PORT}`));
