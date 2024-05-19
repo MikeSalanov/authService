@@ -1,8 +1,9 @@
 const adminService = require('../services/adminService');
 
 const router = require('express').Router();
+const adminMiddleware = require('../middlewares/admin-middleware');
 
-router.get('/users', async (req, res) => {
+router.get('/users',adminMiddleware, async (req, res) => {
   try {
     const usersData = await adminService.getUsers();
     return res.json(usersData);
@@ -11,7 +12,7 @@ router.get('/users', async (req, res) => {
   }
 });
 
-router.delete('/users', async (req, res) => {
+router.delete('/users',adminMiddleware, async (req, res) => {
   const { id } = req.body;
   console.log(id);
   try {

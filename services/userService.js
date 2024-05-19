@@ -133,6 +133,25 @@ const deleteUser = async (id) => {
   }
 };
 
+const changePasswordUser = async ({ user_id, oldPassword, newPassword }) => {
+  try {
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return { message: 'Такой пользователь не найден', isChangeded: false };
+    }
+    const isSamePass = await bcrypt.compare(oldPassword, user.password);
+    if (!isSamePass) {
+      return { message: 'Неверный пароль', isChangeded: false };
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.update({ password: hashedPassword }, { where: { id: user_id } });
+    return { message: 'Пароль изменен', isChanged: true };
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -141,4 +160,5 @@ module.exports = {
   toGetUserInfo,
   confirmRegistration,
   deleteUser,
+  changePasswordUser,
 };
