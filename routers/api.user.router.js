@@ -31,7 +31,7 @@ router.patch('/user', async (req, res, next) => {
     const changePasswordData = await userService.changePasswordUser({
       user_id,
       oldPassword,
-      newPassword,
+      newPassword
     });
 
     res.json(changePasswordData);
