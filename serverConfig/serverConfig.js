@@ -9,7 +9,7 @@ const serverConfig = (app) => {
   app.use(
     cors({
       credentials: true,
-      origin: 'http://localhost:5173',
+      origin: ['http://localhost:5173', 'http://5.35.80.205:8080', 'http://stable-exchange.top'],
     })
   );
 };

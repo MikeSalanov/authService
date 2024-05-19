@@ -36,23 +36,19 @@ const register = async (email, password) => {
 };
 
 const confirmRegistration = async (email, password, confirmationCode) => {
-  try {
-    const registrationConfirmEntity = await registration_confirm.findOne({
-      where: {
-        confirmation_code: confirmationCode,
-      },
-      raw: true,
-    });
-    if (!registrationConfirmEntity)
-      throw ApiError.BadRequest('Invalid data of confirmation');
-    await registration_confirm.update(
-      { register_confirmed: true },
-      { where: { confirmation_code: confirmationCode } }
-    );
-    return await login(email, password);
-  } catch (err) {
-    throw new Error('Error in confirm registration'.concat(err));
-  }
+  const registrationConfirmEntity = await registration_confirm.findOne({
+    where: {
+      confirmation_code: confirmationCode,
+    },
+    raw: true,
+  });
+  if (!registrationConfirmEntity)
+    throw ApiError.BadRequest('Invalid data of confirmation');
+  await registration_confirm.update(
+    { register_confirmed: true },
+    { where: { confirmation_code: confirmationCode } }
+  );
+  return await login(email, password);
 };
 
 const login = async (email, password) => {
@@ -60,21 +56,16 @@ const login = async (email, password) => {
     where: { email },
     raw: true,
   });
-  if (!user) {
-    throw ApiError.BadRequest('Пользователь с таким email не найден');
-  }
+  if (!user) throw ApiError.BadRequest('Пользователь с таким email не найден');
   const isSamePass = await bcrypt.compare(password, user.password);
-  if (!isSamePass) {
-    throw ApiError.BadRequest('Неверный пароль');
-  }
+  if (!isSamePass) throw ApiError.BadRequest('Неверный пароль');
   const registerConfirmDataOfUser = await registration_confirm.findOne({
     where: {
       user_id: user.id,
     },
     raw: true,
   });
-  if (!registerConfirmDataOfUser.register_confirmed)
-    throw ApiError.BadRequest('Account has not confirmed');
+  if (!registerConfirmDataOfUser.register_confirmed) throw ApiError.BadRequest('Account has not confirmed');
   const userDto = new UserDto(user);
   const tokens = tokenService.generateTokens({ ...userDto });
   await tokenService.saveToken(userDto.user_id, tokens.refreshToken);
